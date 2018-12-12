@@ -1,10 +1,10 @@
 package com.indra.crypceal
 
 import android.util.Log
+import java.security.Key
 import java.security.SecureRandom
 import java.util.*
 import javax.crypto.Cipher
-import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
 class AesCrypceal : EncryptionHandler {
@@ -13,7 +13,7 @@ class AesCrypceal : EncryptionHandler {
         private const val transformation = "AES/CBC/PKCS7Padding"
         private const val IV_LENGTH = 16
     }
-    override fun encrypt(plainText: ByteArray, key: SecretKey): ByteArray {
+    override fun encrypt(plainText: ByteArray, key: Key): ByteArray {
         if (BuildConfig.DEBUG) Log.d(TAG, "encrypting....")
         val cipher = Cipher.getInstance(transformation)
         var ivBytes = ByteArray(IV_LENGTH)
@@ -31,7 +31,7 @@ class AesCrypceal : EncryptionHandler {
         return ivBytes + encrypted
     }
 
-    override fun decrypt(encrypted: ByteArray, key: SecretKey): ByteArray {
+    override fun decrypt(encrypted: ByteArray, key: Key): ByteArray {
         val cipher = Cipher.getInstance(transformation)
 
         // Split to initialization vector and significant bytes to be decrypted.

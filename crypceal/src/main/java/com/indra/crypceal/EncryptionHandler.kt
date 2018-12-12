@@ -1,8 +1,8 @@
 package com.indra.crypceal
 
-import javax.crypto.SecretKey
+import java.security.Key
 
 interface EncryptionHandler {
-    fun encrypt(plainText: ByteArray, key: SecretKey) : ByteArray
-    fun decrypt(encrypted: ByteArray, key: SecretKey) : ByteArray
+    fun encrypt(plainText: ByteArray, key: Key) : ByteArray
+    fun decrypt(encrypted: ByteArray, key: Key) : ByteArray
 }

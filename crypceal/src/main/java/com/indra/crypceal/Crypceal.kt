@@ -20,6 +20,9 @@ class Crypceal(private val context: Context, private val type: TYPE) {
     private var handler: EncryptionHandler
     private var keyStore: KeyStore? = null
 
+    /**
+     *
+     */
     enum class TYPE {
         DEFAULT, //RSA + AES
         AES,
@@ -44,20 +47,47 @@ class Crypceal(private val context: Context, private val type: TYPE) {
         }
     }
 
+    /**
+     * encrypts user data
+     */
     fun encrypt(plainText: ByteArray): ByteArray {
-        when(keyStore?.containsAlias(ALIAS_AES)){
-            true -> Log.d(TAG, "Key is present")
-            else ->
-                Log.d(TAG, "Key is not there")
-        }
+        when (type) {
+            DEFAULT -> {
+                return "".toByteArray()
+            }
 
-        val key = keyStore?.getKey(ALIAS_AES, null) as SecretKey
-        return handler.encrypt(plainText, key)
+            AES -> {
+                val key = keyStore?.getKey(ALIAS_AES, null) as SecretKey
+                return handler.encrypt(plainText, key)
+            }
+
+            RSA -> {
+                val privateKey = keyStore?.getEntry(ALIAS_RSA, null) as KeyStore.PrivateKeyEntry
+                val publicKey = privateKey.certificate.publicKey
+                return handler.encrypt(plainText, publicKey)
+            }
+        }
     }
 
+    /**
+     * decrypts encrypted data, use the same algorithm type which was used for encryption
+     */
     fun decrypt(encryptedData: ByteArray): ByteArray {
-        val key = keyStore?.getKey(ALIAS_AES, null) as SecretKey
-        return handler.decrypt(encryptedData, key)
+        when (type) {
+            DEFAULT -> {
+                return "".toByteArray()
+            }
+
+            AES -> {
+                val key = keyStore?.getKey(ALIAS_AES, null) as SecretKey
+                return handler.decrypt(encryptedData, key)
+            }
+
+            RSA -> {
+                val privateKey = keyStore?.getEntry(ALIAS_RSA, null) as KeyStore.PrivateKeyEntry
+                return handler.decrypt(encryptedData, privateKey.privateKey)
+            }
+        }
     }
 
     private fun initKeyStore() {
@@ -88,7 +118,7 @@ class Crypceal(private val context: Context, private val type: TYPE) {
             keyGen.init(spec)
             keyGen.generateKey()
         } else {
-            throw Exception("AES encryption is only supported on API 23 or higher. Please choose DEFAULT/RSA type.")
+            throw RuntimeException("AES encryption is only supported on API 23 or higher. Please choose DEFAULT/RSA type.")
         }
     }
 
@@ -102,7 +132,7 @@ class Crypceal(private val context: Context, private val type: TYPE) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Setting up RSA keys for android-${Build.VERSION.SDK_INT}")
         val start = Calendar.getInstance(TimeZone.getTimeZone("PST"))
         val end = Calendar.getInstance(TimeZone.getTimeZone("PST"))
-        end.add(Calendar.MINUTE, 1)
+        end.add(Calendar.YEAR, 25)
 
         val kpGen = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA,
                 "AndroidKeyStore")

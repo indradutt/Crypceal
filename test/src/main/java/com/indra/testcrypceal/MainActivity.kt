@@ -1,37 +1,45 @@
 package com.indra.testcrypceal
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.indra.crypceal.Crypceal
 import indra.com.testcrypceal.R
-
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private val TAG = "MainActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d(TAG, "onCreate..")
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-
-            testPositiveResults()
+        fab.setOnClickListener {
+            testPositiveResultsForRSA()
         }
     }
 
-    fun testPositiveResults() {
+    private fun testPositiveResultsForAES() {
         val input = "PasswordToTest"
         val crypceal = Crypceal(applicationContext, Crypceal.TYPE.AES)
         val encrypted = crypceal.encrypt(input.toByteArray(Charsets.UTF_8))
         val output = crypceal.decrypt(encrypted)
-        Log.d("Test", "output: "+ String(output))
+        Log.d(TAG, "output: "+ String(output))
+    }
+
+    private fun testPositiveResultsForRSA() {
+        val input = "NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException"
+        val crypceal = Crypceal(applicationContext, Crypceal.TYPE.RSA)
+        val encrypted = crypceal.encrypt(input.toByteArray(Charsets.UTF_8))
+        val output = crypceal.decrypt(encrypted)
+        Log.d(TAG, "output: "+ String(output))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
