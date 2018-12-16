@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("indra.com.testcrypceal", appContext.packageName)
+        assertEquals("com.indra.testcrypceal", appContext.packageName)
     }
 }

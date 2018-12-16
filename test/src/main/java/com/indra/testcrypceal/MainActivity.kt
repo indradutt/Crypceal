@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import com.indra.crypceal.Crypceal
 import indra.com.testcrypceal.R
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -22,24 +21,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            testPositiveResultsForRSA()
+            //
         }
-    }
-
-    private fun testPositiveResultsForAES() {
-        val input = "PasswordToTest"
-        val crypceal = Crypceal(applicationContext, Crypceal.TYPE.AES)
-        val encrypted = crypceal.encrypt(input.toByteArray(Charsets.UTF_8))
-        val output = crypceal.decrypt(encrypted)
-        Log.d(TAG, "output: "+ String(output))
-    }
-
-    private fun testPositiveResultsForRSA() {
-        val input = "NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException"
-        val crypceal = Crypceal(applicationContext, Crypceal.TYPE.RSA)
-        val encrypted = crypceal.encrypt(input.toByteArray(Charsets.UTF_8))
-        val output = crypceal.decrypt(encrypted)
-        Log.d(TAG, "output: "+ String(output))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

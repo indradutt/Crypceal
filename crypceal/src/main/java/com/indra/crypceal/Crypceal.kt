@@ -5,18 +5,21 @@ import android.os.Build
 import android.security.KeyPairGeneratorSpec
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.util.Base64
 import android.util.Log
 import com.indra.crypceal.Crypceal.TYPE.*
 import java.math.BigInteger
+import java.security.Key
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import java.util.*
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
+import javax.crypto.spec.SecretKeySpec
 import javax.security.auth.x500.X500Principal
 
 
-class Crypceal(private val context: Context, private val type: TYPE) {
+class Crypceal(private val context: Context, private val type: TYPE = DEFAULT) {
     private var handler: EncryptionHandler
     private var keyStore: KeyStore? = null
 
@@ -34,14 +37,16 @@ class Crypceal(private val context: Context, private val type: TYPE) {
         private const val ALIAS_AES = "Crypceal_Aes"
         private const val ALIAS_RSA = "Crypceal_Rsa"
         private const val ANDROID_KEYSTORE = "AndroidKeyStore"
+        private const val PREF_ALIAS = "crypceal_key"
     }
 
     init {
         initKeyStore()
         initKeyStoreForAES()
         initKeyStoreForRSA()
+        initAESKeyForDefaultMode()
         handler = when(type) {
-            DEFAULT -> AesRsaCrypceal()
+            DEFAULT -> AesCrypceal()
             AES -> AesCrypceal()
             RSA -> RsaCrypceal()
         }
@@ -51,43 +56,36 @@ class Crypceal(private val context: Context, private val type: TYPE) {
      * encrypts user data
      */
     fun encrypt(plainText: ByteArray): ByteArray {
-        when (type) {
-            DEFAULT -> {
-                return "".toByteArray()
-            }
+        var key: Key
+        key = when (type) {
+            DEFAULT -> getAESKey()
 
-            AES -> {
-                val key = keyStore?.getKey(ALIAS_AES, null) as SecretKey
-                return handler.encrypt(plainText, key)
-            }
+            AES -> keyStore?.getKey(ALIAS_AES, null) as SecretKey
 
             RSA -> {
                 val privateKey = keyStore?.getEntry(ALIAS_RSA, null) as KeyStore.PrivateKeyEntry
-                val publicKey = privateKey.certificate.publicKey
-                return handler.encrypt(plainText, publicKey)
+                privateKey.certificate.publicKey
             }
         }
+        return handler.encrypt(plainText, key)
     }
 
     /**
      * decrypts encrypted data, use the same algorithm type which was used for encryption
      */
     fun decrypt(encryptedData: ByteArray): ByteArray {
-        when (type) {
-            DEFAULT -> {
-                return "".toByteArray()
-            }
+        var key: Key
+        key = when (type) {
+            DEFAULT -> getAESKey()
 
-            AES -> {
-                val key = keyStore?.getKey(ALIAS_AES, null) as SecretKey
-                return handler.decrypt(encryptedData, key)
-            }
+            AES -> keyStore?.getKey(ALIAS_AES, null) as SecretKey
 
             RSA -> {
                 val privateKey = keyStore?.getEntry(ALIAS_RSA, null) as KeyStore.PrivateKeyEntry
-                return handler.decrypt(encryptedData, privateKey.privateKey)
+                privateKey.privateKey
             }
         }
+        return handler.decrypt(encryptedData, key)
     }
 
     private fun initKeyStore() {
@@ -161,5 +159,49 @@ class Crypceal(private val context: Context, private val type: TYPE) {
             kpGen.initialize(spec)
             kpGen.generateKeyPair()
         }
+    }
+
+    private fun initAESKeyForDefaultMode() {
+        if (type != DEFAULT) return
+        val sharedPreferences = context.getSharedPreferences(PREF_ALIAS,
+        Context.MODE_PRIVATE);
+        //if not present, generate it, encrypt it and save it in shared preferences
+        if(!sharedPreferences.contains(PREF_ALIAS)) {
+            val keyGen = KeyGenerator.getInstance (KeyProperties.KEY_ALGORITHM_AES)
+            keyGen.init(128)
+            val secretKey = keyGen.generateKey()
+
+            val encryptedSecretKey = encryptAESKey(secretKey.encoded)
+
+            val editor = sharedPreferences.edit()
+            editor.putString(PREF_ALIAS, encryptedSecretKey)
+            editor.apply();
+        }
+    }
+
+    private fun getAESKey() : Key {
+        val sharedPreferences = context.getSharedPreferences(PREF_ALIAS,
+                Context.MODE_PRIVATE)
+        if (sharedPreferences.contains(PREF_ALIAS)) {
+            val encryptedAesKey = sharedPreferences.getString(PREF_ALIAS, null)
+            val decryptedAesKey = decryptAESKey(encryptedAesKey)
+            return SecretKeySpec(decryptedAesKey, 0, decryptedAesKey.size, KeyProperties.KEY_ALGORITHM_AES)
+        }
+        throw RuntimeException("Could not find Key")
+    }
+
+    private fun encryptAESKey(aesKey: ByteArray) : String {
+        val privateKey = keyStore?.getEntry(ALIAS_RSA, null)
+                as KeyStore.PrivateKeyEntry
+        val publicKey = privateKey.certificate.publicKey
+        val encryptedData = RsaCrypceal().encrypt(aesKey, publicKey)
+        return Base64.encodeToString(encryptedData, Base64.NO_WRAP)
+    }
+
+    private fun decryptAESKey(encryptedAesKey: String) : ByteArray {
+        val privateKey = keyStore?.getEntry(ALIAS_RSA, null)
+                as KeyStore.PrivateKeyEntry
+        val key = privateKey.privateKey as Key
+        return RsaCrypceal().decrypt(Base64.decode(encryptedAesKey, Base64.NO_WRAP), key)
     }
 }
