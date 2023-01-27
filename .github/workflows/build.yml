@@ -12,7 +12,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  foo:
+  Checks:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -20,5 +20,11 @@ jobs:
     steps:
  
       # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: Echo
         run: echo Hello, world!
+      - name: label swapping
+        uses: jinmayamashita/ready-for-review@1.0.0
+        in-progress-label: 'In Progress'
+        ready-for-review-label: 'ReadyForReview'
+        
+        
