@@ -3,9 +3,10 @@
 A general purpose library for encypting user data. <br>
 [Getting Started](#getting_started)<br/>
 [Usages](#usage)<br/>
+[Current Version](#current_version)
 
 ## Getting Started
-TBD
+TBD 
 
 
 ## Usage
