@@ -22,6 +22,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Echo
         run: echo Hello, world!
+      - name: Back to Drafts
+        run: gh pr ready --undo
       - name: label swapping
         uses: jinmayamashita/ready-for-review@1.0.0
         with:
