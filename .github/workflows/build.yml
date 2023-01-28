@@ -24,6 +24,7 @@ jobs:
         run: echo Hello, world!
       - name: Back to Drafts
         run: gh pr ready --undo
+        GH_TOKEN: ${{ github.token }}
       - name: label swapping
         uses: jinmayamashita/ready-for-review@1.0.0
         with:
