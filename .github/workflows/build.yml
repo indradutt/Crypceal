@@ -24,7 +24,9 @@ jobs:
         run: echo Hello, world!
       - name: label swapping
         uses: jinmayamashita/ready-for-review@1.0.0
-        in-progress-label: 'In Progress'
-        ready-for-review-label: 'ReadyForReview'
+        with:
+          in-progress-label: 'In Progress'
+          ready-for-review-label: 'ReadyForReview'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
         
         
