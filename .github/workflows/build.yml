@@ -20,8 +20,8 @@ jobs:
     steps:
  
       # Runs a single command using the runners shell
-      - name: Echo
-        run: echo Hello, world!
+      #- name: Echo
+      #  run: echo Hello, world!
       
       - name: label swapping
         uses: jinmayamashita/ready-for-review@1.0.0
