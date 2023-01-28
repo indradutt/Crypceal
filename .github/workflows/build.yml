@@ -2,35 +2,9 @@
 
 name: CI
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
-  pull_request:
-    branches: [ "master" ]
-    types: [ready_for_review]
-    
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  label_ready:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
- 
-      # Runs a single command using the runners shell
-      - name: Echo
-        run: echo Hello, world!
-      
-      - name: label swapping
-        uses: jinmayamashita/ready-for-review@1.0.0
-        with:
-          in-progress-label: 'In Progress'
-          ready-for-review-label: 'ReadyForReview'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          
-          # Controls when the workflow will run
+        
+# Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
   pull_request:
