@@ -9,7 +9,13 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  print_job:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+    - name: Say Hello
+      run: echo Hello, world!
+      
   conflict_check:
     #if: github.event.pull_request.draft == false
     # The type of runner that the job will run on
@@ -17,8 +23,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: Say Hello
-      run: echo Hello, world!
     - name: check if prs are dirty
       uses: eps1lon/actions-label-merge-conflict@releases/2.x
       if: env.LABELING_TOKEN != '' && env.LABELING_TOKEN != null
