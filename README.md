@@ -1,5 +1,4 @@
 # Crypceal
-=======
 
 A general purpose library for encypting user data.
 
