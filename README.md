@@ -2,8 +2,8 @@
 
 A general purpose library for encypting user data. 
 
-[Getting Started](#getting_started)
-[Usages](#usage)
+[Getting Started](#getting_started)<br/>
+[Usage](#usage)<br/>
 
 ## Getting Started
 TBD
