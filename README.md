@@ -1,8 +1,14 @@
 # Crypceal
 
-A general purpose library for encypting user data.
+A general purpose library for encypting user data. 
+[Get Started](#getting_started)
+[Usage](#usage)
 
-## Description
+## Getting Started
+TBD
+
+
+## Usage
 Crypceal provides AES, RSA and RSA+AES implementations to encrypt user data.
 
 
