@@ -27,6 +27,7 @@ jobs:
         with:
           in-progress-label: 'In Progress'
           ready-for-review-label: 'ReadyForReview'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           
         
         
