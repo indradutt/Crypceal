@@ -1,8 +1,9 @@
 # Crypceal
 
 A general purpose library for encypting user data. <br>
-[Getting Started](#getting_started)
+[Getting Started](#getting_started)<br/>
 [Usages](#usage)<br/>
+[Current Versions](#current_version)<br/>
 
 ## Getting Started
 TBD
