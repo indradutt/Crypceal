@@ -3,7 +3,7 @@
 A general purpose library for encypting user data. 
 
 [Getting Started](#getting_started)
-[Usage](#usage)
+[Usages](#usage)
 
 ## Getting Started
 TBD
