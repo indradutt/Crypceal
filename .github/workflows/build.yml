@@ -4,12 +4,14 @@ name: PullRequestConflicting
 # events but only for the master branch
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ "master: ]
+    types: [converted_to_draft, ready_for_review]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   conflict_check:
+    if: github.event.pull_request.draft == false
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -17,8 +19,7 @@ jobs:
     steps:
     - name: check if prs are dirty
       uses: eps1lon/actions-label-merge-conflict@releases/2.x
-      #if: env.LABELING_TOKEN != '' && env.LABELING_TOKEN != null
-      if: github.event.pull_request.draft == false
+      if: env.LABELING_TOKEN != '' && env.LABELING_TOKEN != null
       id: check
       with:
         dirtyLabel: "ResolveConflicts"
