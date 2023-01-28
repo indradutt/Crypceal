@@ -32,5 +32,6 @@ jobs:
           
       - name: Back to Drafts
         run: gh pr ready --undo
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        with: 
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
         
