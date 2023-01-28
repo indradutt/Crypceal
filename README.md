@@ -1,6 +1,6 @@
 # Crypceal
 
-A general purpose library for encypting user data. 
+A general purpose library for encypting user data. <br>
 [Getting Started](#getting_started)<br/>
 [Usages](#usage)<br/>
 
