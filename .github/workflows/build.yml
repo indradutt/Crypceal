@@ -12,7 +12,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   label_draft:
-    if: pull_request.types == 'converted_to_draft'
+    if: contains(github.event.pull_request.types, 'convert_to_draft')
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -28,7 +28,7 @@ jobs:
           
           
   label_ready:
-    if: pull_request.types == 'ready_for_review'
+    if: contains(github.event.pull_request.types, 'ready_for_review')
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
