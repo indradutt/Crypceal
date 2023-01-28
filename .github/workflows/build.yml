@@ -30,7 +30,8 @@ jobs:
           
           
   label_ready:
-    if: contains(github.event.pull_request.labels.*.name, 'In Progress')
+    #if: contains(github.event.pull_request.labels.*.name, 'In Progress')
+    if: github.event.pull_request.converted_to_draft == true
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
