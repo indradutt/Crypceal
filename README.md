@@ -37,3 +37,6 @@ Crypceal(context, Crypceal.TYPE.RSA).decrypt(encryptedData: ByteArray)
 Crypceal(context).encrypt(userData: ByteArray)
 Crypceal(context).decrypt(encryptedData: ByteArray)
 ```
+
+## Usage
+Crypceal provides AES, RSA and RSA+AES implementations to encrypt user data.
