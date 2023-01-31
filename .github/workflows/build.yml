@@ -10,10 +10,27 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   print_job:
-    if: github.event.pull_request.draft == false
+    #if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
     - name: Say Hello
       run: echo Hello, world!
       
-  
+  conflict_check:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: check if prs are dirty
+      uses: eps1lon/actions-label-merge-conflict@releases/2.x
+      if: env.LABELING_TOKEN != '' && env.LABELING_TOKEN != null
+      id: check
+      with:
+        dirtyLabel: "ResolveConflicts"
+        repoToken: "${{ secrets.GITHUB_TOKEN  }}"
+        continueOnMissingPermissions: true
+        commentOnDirty: 'This pull request has conflicting changes, the author must resolve the conflicts before this pull request can be merged.'
+        commentOnClean: 'Conflicts have been resolved. A maintainer will take a look shortly.'
+      env:
+        LABELING_TOKEN: ${{secrets.GITHUB_TOKEN }}
