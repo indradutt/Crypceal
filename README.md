@@ -1,5 +1,7 @@
 # Crypceal
 
+License 2023
+
 A general purpose library for encypting user data. <br>
 [Getting Started](#getting_started)<br/>
 [Usages](#usage)<br/>
